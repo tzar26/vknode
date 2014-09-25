@@ -1,8 +1,84 @@
-var APP_ID = '4556386',
-    SECRET = 'ET1IPpkIFSqawsZSqEIG',
-    REDIRECT_URI = 'http://whiteknez.ru';
+var vk = {
+    data: {},
+    appID: 4556386, // как веб сайт
+    appPermissions: 8194,
 
-function vkauth(){
-    /** Перенаправляем на страницу авторизации ВКонтакте */
-    location.href = 'http://api.vk.com/oauth/authorize?client_id=' + APP_ID + '&redirect_uri=' + REDIRECT_URI + '&display=page&scope=wall';
+    //инициализация
+    init: function() {
+        VK.init({apiId: 4556386});
+    },
+
+    //метод входа
+    login: function(callback) {
+        function authInfo(response){
+            if(response.session){ // Авторизация успешна
+                vk.data.user = response.session.user;
+                callback(vk.data.user);
+            } else {
+                alert("Авторизоваться не удалось!");
+            }
+        }
+
+        VK.Auth.login(authInfo, vk.appPermissions);
+    },
+
+    //метод проверки доступа
+    access: function(callback) {
+        VK.Auth.getLoginStatus(function (response) {
+            if(response.session){ // Пользователь авторизован
+                callback(vk.data.user);
+            } else { // Пользователь не авторизован
+                vk.login(callback);
+            }
+        })
+    },
+
+    logout: function() {
+        VK.Auth.logout();
+        this.data.user={};
+        alert('вы вышли');
+    }
 }
+
+vk.init();
+vk.access(function(usr) {
+    console.log(usr)
+    // VK.Api.call( //публикация уже загруженного изображения, фотографии
+    //     'wall.post',
+    //     {
+    //         message: 'пост из моего приложения :)))',
+    //         attachment: 'photo25962097_340611618'
+    //     },
+    //     function(r) {
+    //         if(r.response) {
+    //             console.log(r.response);
+    //         }
+    //     }
+    // );
+    VK.Api.call(
+        'friends.get',
+        {},
+        function(r) {
+            console.log(r)
+            if(r.response) {
+                var friends = r.response, friends_list_line = '';
+                for(var f in friends) {
+                    friends_list_line = (friends_list_line != '') ? friends_list_line + ',' + friends[f] : friends[f];
+                };
+                VK.Api.call(
+                    'users.get',
+                    {
+                        user_ids: friends_list_line,
+                        fields: 'sex,bdate,city,photo_100,education,schools'
+                    },
+                    function(r) {
+                        if(r.response) {
+                            console.log(r.response)
+                        }
+                    }
+                )
+            }
+        }
+    )
+});
+// VK.UI.button('login_button');
