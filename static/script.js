@@ -69,7 +69,8 @@ vk.access(function(usr) {
                     'users.get',
                     {
                         user_ids: friends_list_line,
-                        fields: 'sex,bdate,city,photo_100,education,schools'
+                        fields: 'sex,bdate,city,photo_100,education,schools',
+                        v: 5.8
                     },
                     function(r) {
                         if(r.response) {
