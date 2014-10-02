@@ -69,9 +69,6 @@ var vk = {
 }
 
 vk.init();
-alert(vk.data.user.id);
-// vk.getUserInfo(vk.data.user.id);
-
 vk.access(function(usr) {
     console.log(usr);
 
@@ -115,3 +112,6 @@ vk.access(function(usr) {
     )
 });
 // VK.UI.button('login_button');
+
+alert(vk.data.user);
+// vk.getUserInfo(vk.data.user.id);
