@@ -68,50 +68,78 @@ var vk = {
     },
 }
 
-vk.init();
-vk.access(function(usr) {
-    console.log(usr);
+// vk.init();
+// vk.access(function(usr) {
+//     console.log(usr);
 
-    // VK.Api.call( //публикация уже загруженного изображения, фотографии
-    //     'wall.post',
-    //     {
-    //         message: 'пост из моего приложения :)))',
-    //         attachment: 'photo25962097_340611618'
-    //     },
-    //     function(r) {
-    //         if(r.response) {
-    //             console.log(r.response);
-    //         }
-    //     }
-    // );
-    VK.Api.call(
-        'friends.get',
-        {},
-        function(r) {
-            console.log(r)
-            if(r.response) {
-                var friends = r.response, friends_list_line = '';
-                for(var f in friends) {
-                    friends_list_line = (friends_list_line != '') ? friends_list_line + ',' + friends[f] : friends[f];
-                };
-                VK.Api.call(
-                    'users.get',
-                    {
-                        user_ids: friends_list_line,
-                        fields: 'sex,bdate,city,photo_100,education,schools',
-                        v: 5.8
-                    },
-                    function(r) {
-                        if(r.response) {
-                            alert(r.response[0].first_name)
-                        }
-                    }
-                )
-            }
-        }
-    )
-});
+//     // VK.Api.call( //публикация уже загруженного изображения, фотографии
+//     //     'wall.post',
+//     //     {
+//     //         message: 'пост из моего приложения :)))',
+//     //         attachment: 'photo25962097_340611618'
+//     //     },
+//     //     function(r) {
+//     //         if(r.response) {
+//     //             console.log(r.response);
+//     //         }
+//     //     }
+//     // );
+//     VK.Api.call(
+//         'friends.get',
+//         {},
+//         function(r) {
+//             console.log(r)
+//             if(r.response) {
+//                 var friends = r.response, friends_list_line = '';
+//                 for(var f in friends) {
+//                     friends_list_line = (friends_list_line != '') ? friends_list_line + ',' + friends[f] : friends[f];
+//                 };
+//                 VK.Api.call(
+//                     'users.get',
+//                     {
+//                         user_ids: friends_list_line,
+//                         fields: 'sex,bdate,city,photo_100,education,schools',
+//                         v: 5.8
+//                     },
+//                     function(r) {
+//                         if(r.response) {
+//                             alert(r.response[0].first_name)
+//                         }
+//                     }
+//                 )
+//             }
+//         }
+//     )
+// });
 // VK.UI.button('login_button');
 
-alert(vk.data.user);
+// alert(vk.data.user);
 // vk.getUserInfo(vk.data.user.id);
+
+var plugin_vk = {
+    wwwref: false,
+    plugin_perms: "friends,wall,photos,wall,offline,notes",
+    appID: 4556386,
+
+    auth: function (force) {
+        if (!window.localStorage.getItem("plugin_vk_token") || force || window.localStorage.getItem("plugin_vk_perms")!=plugin_vk.plugin_perms) {
+            var authURL="https://oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
+            this.wwwref = window.open(encodeURI(authURL), '_blank', 'location=no');
+            this.wwwref.addEventListener('loadstop', this.auth_event_url);
+        }
+    },
+    auth_event_url: function (event) {
+        alert(1)
+        var tmp=(event.url).split("#");
+        if (tmp[0]=='https://oauth.vk.com/blank.html' || tmp[0]=='http://oauth.vk.com/blank.html') {
+            plugin_vk.wwwref.close();
+            var tmp=url_parser.get_args(tmp[1]);
+            window.localStorage.setItem("plugin_vk_token", tmp['access_token']);
+            window.localStorage.setItem("plugin_vk_user_id", tmp['user_id']);
+            window.localStorage.setItem("plugin_fb_exp", tmp['expires_in']);
+            window.localStorage.setItem("plugin_vk_perms", plugin_vk.plugin_perms);
+            alert(tmp.access_token)
+        }
+    }
+};
+plugin_vk.auth();
