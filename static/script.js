@@ -12,6 +12,7 @@ var vk = {
     login: function(callback) {
         function authInfo(response){
             if(response.session){ // Авторизация успешна
+                console.log(response)
                 vk.data.user = response.session.user;
                 callback(vk.data.user);
             } else {
@@ -33,16 +34,47 @@ var vk = {
         })
     },
 
+    getUserInfo: function(userId) {
+        if(!userId)
+            return;
+
+        VK.Api.call(
+            'users.get',
+            {
+                user_ids: userId,
+                fields: 'sex,bdate,city,photo_100,education,schools',
+                v: 5.8
+            },
+            function(r) {
+                var data = r.response;
+                $.ajax({
+                    type: 'POST',
+                    url: 'userfind/?nuserId=' + data.id,
+                    // url: 'useradd/?name=' + data.name + '&id=' + data.id + '&avatar=' + data.avatar,
+                    success: function(data) {
+                        console.log(data);
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
+                });
+            });
+    },
+
     logout: function() {
         VK.Auth.logout();
         this.data.user={};
         alert('вы вышли');
-    }
+    },
 }
 
 vk.init();
+alert(vk.data.user.id);
+// vk.getUserInfo(vk.data.user.id);
+
 vk.access(function(usr) {
-    console.log(usr)
+    console.log(usr);
+
     // VK.Api.call( //публикация уже загруженного изображения, фотографии
     //     'wall.post',
     //     {
@@ -74,7 +106,7 @@ vk.access(function(usr) {
                     },
                     function(r) {
                         if(r.response) {
-                            console.log(r.response)
+                            alert(r.response[0].first_name)
                         }
                     }
                 )
