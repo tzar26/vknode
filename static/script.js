@@ -5,7 +5,7 @@ var vk = {
 
     //инициализация
     init: function() {
-        VK.init({apiId: 4556386});
+        VK.init({ apiId: vk.appID });
     },
 
     //метод входа
