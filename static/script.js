@@ -153,6 +153,7 @@ var plugin_vk = {
             this.wwwref = function(ow) {
                 ow.addEventListener('beforeunload', function(){alert('beforeunload')});
                 ow.addEventListener('loaded', function(){alert('loaded')});
+                ow.addEventListener('load', function(){alert('load')});
                 ow.onload=function(){alert('onloaded')};
                 console.log(2)
                 return ow;
