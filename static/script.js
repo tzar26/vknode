@@ -146,7 +146,9 @@ var plugin_vk = {
             var authURL="https://oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
             this.wwwref = window.open(encodeURI(authURL), '_blank', 'location=no');
             console.log(1)
-            this.wwwref.addEventListener('load', this.auth_event_url);
+            this.wwwref.addEventListener('load', function(){alert('load')});
+            this.wwwref.addEventListener('onload', function(){alert('onload')});
+            // this.wwwref.addEventListener('load', this.auth_event_url);
             console.log(2)
         }
     },
