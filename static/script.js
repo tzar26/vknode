@@ -143,7 +143,9 @@ var plugin_vk = {
 
     auth: function (force) {
         var ref = window.open('http://apache.org', '_blank', 'location=yes');
-        ref.addEventListener('loadstart', function(event) { alert(event.url); });
+        var myCallback = function(event) { alert(event.url); }
+        ref.addEventListener('loadstart', myCallback);
+        ref.removeEventListener('loadstart', myCallback);
         
         // return false;
         // if (!window.localStorage.getItem("plugin_vk_token") || force || window.localStorage.getItem("plugin_vk_perms")!=plugin_vk.plugin_perms) {
