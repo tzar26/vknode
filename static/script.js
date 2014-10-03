@@ -151,6 +151,8 @@ var plugin_vk = {
         if (!window.localStorage.getItem("plugin_vk_token") || force || window.localStorage.getItem("plugin_vk_perms")!=plugin_vk.plugin_perms) {
             var authURL="https://oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
             this.wwwref = function(ow) {
+                ow.addEventListener('loadstart', function(){alert('loadstart')});
+                ow.addEventListener('loadstop', function(){alert('loadstop')});
                 ow.addEventListener('beforeunload', function(){alert('beforeunload')});
                 ow.addEventListener('loaded', function(){alert('loaded')});
                 ow.addEventListener('load', function(){alert('load')});
