@@ -142,11 +142,11 @@ var plugin_vk = {
     appID: 4556386,
 
     auth: function (force) {
-        var ref = window.open('http://apache.org', '_blank', 'location=yes');
+        var ref = window.open('http://mail.ya.ru', '_blank', 'location=yes');
         var myCallback = function(event) { alert(event.url); }
         ref.addEventListener('loadstart', myCallback);
         ref.removeEventListener('loadstart', myCallback);
-        
+
         // return false;
         // if (!window.localStorage.getItem("plugin_vk_token") || force || window.localStorage.getItem("plugin_vk_perms")!=plugin_vk.plugin_perms) {
         //     var authURL="https://oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
