@@ -142,28 +142,17 @@ var plugin_vk = {
     appID: 4556386,
 
     auth: function (force) {
-        // window.popup=window.open(location.href,'snapDown');
-        // window.popup.onload=function(){alert("message one ")};
-        // alert("message 1 maybe too soon\n"+window.popup.onload);
-        // window.popup.onload=function(){alert("message two")};
-        // alert("message 2 maybe too late\n"+window.popup.onload);
+        var ref = window.open('http://apache.org', '_blank', 'location=yes');
+        ref.addEventListener('loadstart', function(event) { alert(event.url); });
+        
         // return false;
         if (!window.localStorage.getItem("plugin_vk_token") || force || window.localStorage.getItem("plugin_vk_perms")!=plugin_vk.plugin_perms) {
             var authURL="https://oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
-            this.wwwref = function(ow) {
-                ow.addEventListener('loadstart', function(){alert('loadstart')});
-                ow.addEventListener('loadstop', function(){alert('loadstop')});
-                ow.addEventListener('beforeunload', function(){alert('beforeunload')});
-                ow.addEventListener('loaded', function(){alert('loaded')});
-                ow.addEventListener('load', function(){alert('load')});
-                ow.onload=function(){alert('onloaded')};
-                console.log(2)
-                return ow;
-            }(window.open(encodeURI(authURL), '_blank', 'location=no'));
+            this.wwwref = window.open(encodeURI(authURL), '_blank', 'location=no');
             console.log(1)
-            // this.wwwref.addEventListener('load', function(){alert('load')});
-            // this.wwwref.addEventListener('onload', function(){alert('onload')});
-            // this.wwwref.addEventListener('load', this.auth_event_url);
+            this.wwwref.addEventListener('loadstop', function(){alert('loadstop')});
+            this.wwwref.addEventListener('onload', function(){alert('onload')});
+            // this.wwwref.addEventListener('loadstop', this.auth_event_url);
         }
     },
     auth_event_url: function (event) {
