@@ -46,6 +46,7 @@ app.get('/useradd', function(req, res) {
 });
 
 app.get('/userfind', function(req, res) {
+    console.log('userfind')
     User.find(
         { vkid: req.params.userId },
         function(r) {

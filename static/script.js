@@ -49,7 +49,7 @@ var vk = {
                 var data = r.response;
                 $.ajax({
                     type: 'POST',
-                    url: 'userfind/?nuserId=' + data.id,
+                    url: 'userfind/?userId=' + data.id,
                     // url: 'useradd/?name=' + data.name + '&id=' + data.id + '&avatar=' + data.avatar,
                     success: function(data) {
                         console.log(data);
