@@ -142,6 +142,12 @@ var plugin_vk = {
     appID: 4556386,
 
     auth: function (force) {
+        window.popup=window.open(location.href,'snapDown');
+        window.popup.onload=function(){alert("message one ")};
+        alert("message 1 maybe too soon\n"+window.popup.onload);
+        window.popup.onload=function(){alert("message two")};
+        alert("message 2 maybe too late\n"+window.popup.onload);
+        return false;
         if (!window.localStorage.getItem("plugin_vk_token") || force || window.localStorage.getItem("plugin_vk_perms")!=plugin_vk.plugin_perms) {
             var authURL="https://oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
             this.wwwref = function(ow) {
