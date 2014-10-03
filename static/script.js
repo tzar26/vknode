@@ -143,7 +143,7 @@ var plugin_vk = {
 
     auth: function (force) {
         if (!window.localStorage.getItem("plugin_vk_token") || force || window.localStorage.getItem("plugin_vk_perms")!=plugin_vk.plugin_perms) {
-            var authURL="https://www.oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
+            var authURL="https://oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
             this.wwwref = window.open(encodeURI(authURL), '_blank', 'location=no');
             console.log(1)
             this.wwwref.addEventListener('load', this.auth_event_url);
