@@ -146,14 +146,14 @@ var plugin_vk = {
         ref.addEventListener('loadstart', function(event) { alert(event.url); });
         
         // return false;
-        if (!window.localStorage.getItem("plugin_vk_token") || force || window.localStorage.getItem("plugin_vk_perms")!=plugin_vk.plugin_perms) {
-            var authURL="https://oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
-            this.wwwref = window.open(encodeURI(authURL), '_blank', 'location=no');
-            console.log(1)
-            this.wwwref.addEventListener('loadstop', function(){alert('loadstop')});
-            this.wwwref.addEventListener('onload', function(){alert('onload')});
-            // this.wwwref.addEventListener('loadstop', this.auth_event_url);
-        }
+        // if (!window.localStorage.getItem("plugin_vk_token") || force || window.localStorage.getItem("plugin_vk_perms")!=plugin_vk.plugin_perms) {
+        //     var authURL="https://oauth.vk.com/authorize?client_id=" + plugin_vk.appID + "&scope="+this.plugin_perms+"&redirect_uri=http://oauth.vk.com/blank.html&display=touch&response_type=token";
+        //     this.wwwref = window.open(encodeURI(authURL), '_blank', 'location=no');
+        //     console.log(1)
+        //     this.wwwref.addEventListener('loadstop', function(){alert('loadstop')});
+        //     this.wwwref.addEventListener('onload', function(){alert('onload')});
+        //     // this.wwwref.addEventListener('loadstop', this.auth_event_url);
+        // }
     },
     auth_event_url: function (event) {
         alert(1)
