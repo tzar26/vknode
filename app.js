@@ -1,20 +1,16 @@
-// var app = require('express').createServer();
 var express = require("express");
 var app = express();
 var request = require('request');
-var APP_ID = '4556386',
-    SECRET = 'ET1IPpkIFSqawsZSqEIG',
-    REDIRECT_URI = 'http://whiteknez.ru';
 
 app.use(express.static(__dirname + '/static'));
 app.use(express.cookieParser());
 
-app.get('/', function(req, res) {
+app.get('/', function(req, res, next) {
     var swig = require("swig");
     var template = swig.compileFile("/var/www/vkapi/vk_node/templates/home.html");
     var output = template({
-            pagename: 'awesome people',
-            authors: ['Paul', 'Jim', 'Jane']
+            // pagename: 'awesome people',
+            // authors: ['Paul', 'Jim', 'Jane']
         });
     res.send(output);
 });
@@ -23,9 +19,6 @@ app.get('/', function(req, res) {
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
 
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-
 var userSchema = mongoose.Schema({
     name: String,
     vkid: String,
@@ -33,33 +26,53 @@ var userSchema = mongoose.Schema({
 });
 var User = mongoose.model('User', userSchema);
 
-app.get('/useradd', function(req, res) {
+var AddUser = function(req, callback) {
     var user = new User({
-        name: req.params.name,
-        vkid: req.params.id,
-        avatar: req.params.avatar,
+        name: req.query.name,
+        vkid: req.query.vkid,
+        avatar: req.query.avatar,
     });
-    user.save(function(err, user) {
-        if(err) return console.error(err);
-        console.log('user saved');
+    user.save(function(err, usr) {
+        if(err) {
+            callback({ error: 'fuck' });
+        };
+        callback(usr);
+    });
+};
+app.post('/register/', function(req, res, next) {
+    AddUser(req, function(user) {
+        res.json(user);
     });
 });
 
-app.get('/userfind', function(req, res) {
-    console.log('userfind')
+var GetUser = function(req, callback) {
     User.find(
-        { vkid: req.params.userId },
-        function(r) {
-            res.json({
-                name: r.name,
-                vkid: r.vkid,
-                avatar: r.avatar,
-            });
-        },
-        function(err) {
-            res.json({});
+        { vkid: req.query.userId },
+        function(err, r) {
+            if(err) 
+                callback({})
+            else
+                callback(r);
         }
     )
+}
+app.get('/userfind/', function(req, res, next) {
+    GetUser(req, function(user) {
+        if(!user) {
+            res.json({});
+            return;
+        }
+        user=user[0]
+        if(user) {
+            res.json({
+                name: user.name,
+                vkid: user.vkid,
+                avatar: user.avatar,
+            });
+        } else {
+            res.json({error: 'no user'})
+        }
+    })
 });
 
 app.listen(80);
